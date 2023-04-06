@@ -8,9 +8,21 @@ const users = []
 const tweets = []
 
 app.post("/sign-up", (req, res)=>{
-    const {username, avatar} = req.params
+    const {username, avatar} = req.body
     users.push({username, avatar})
     res.send("OK")
+})
+
+app.post("/tweets", (req, res) => {
+    const {username, tweet} = req.body
+    const userSignedUp = users.find((el)=>el.username === username)
+    
+    if (!userSignedUp) {
+        return res.send("UNAUTHORIZED")
+    } else {
+        tweets.push({username, tweet})
+        res.send("OK")
+    }
 })
 
 
