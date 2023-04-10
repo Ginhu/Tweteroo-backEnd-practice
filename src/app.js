@@ -54,6 +54,21 @@ app.get("/tweets", (req, res)=>{
     res.send(tweetsGet)
 })
 
+app.get("/tweets/:username", (req, res)=> {
+    const {username} = req.params
+    const avatarFind = users.find(el=>el.username===username)
+    const avatar = avatarFind.avatar
+    const tweetsGet = tweets.filter((el) => el.username === username)
+    const tweetsGetUsername = []
+
+    for (let i = 0; i<tweetsGet.length; i++) {
+        const tweet = tweetsGet[i].tweet
+        tweetsGetUsername.push({username, avatar, tweet})
+    }
+
+    res.send(tweetsGetUsername)
+}) 
+
 
 const PORT = 5000
 app.listen(PORT, ()=>console.log("Server ON"))
