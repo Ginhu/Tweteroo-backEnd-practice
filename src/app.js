@@ -36,10 +36,35 @@ app.post("/tweets", (req, res) => {
 })
 
 app.get("/tweets", (req, res)=>{
-    const tweetsGet = []
-    const page = req.query.page
+    
+    const page = parseInt(req.query.page)
 
-    for (let i = tweets.length-1; i>tweets.length-11; i--) {
+    const tweetsGet = tweets.map(el=>{
+        const username = el.username
+        const tweet = el.tweet
+        const avatarFind = users.find(elem => elem.username === el.username)
+        const avatar = avatarFind.avatar
+
+        return {username, avatar, tweet}
+    })
+
+    const tweetsGetReverse = tweetsGet.reverse()
+    
+    if (!page) {
+        res.status(200).send(tweetsGetReverse.slice(0, 10))
+    }
+
+    if(page>=1) {
+        res.status(200).send(tweetsGetReverse.slice((page*10 - 10), (page*10)))
+    } else {
+        res.status(400).send("Informe uma página válida!")
+    }
+
+   
+    
+    
+
+    /* for (let i = tweets.length-1; i>tweets.length-11; i--) {
 
         if(tweets.length === 0) {
             break
@@ -55,9 +80,9 @@ app.get("/tweets", (req, res)=>{
         if(i === 0) {
             break
         } 
-    }
+    } */
 
-    res.status(200).send(tweetsGet)
+    /* res.status(200).send(tweetsGet) */
 })
 
 app.get("/tweets/:username", (req, res)=> {
@@ -78,7 +103,7 @@ app.get("/tweets/:username", (req, res)=> {
         tweetsGetUsername.push({username, avatar, tweet})
     }
 
-    res.status(200).send(tweetsGetUsername)
+    res.status(200).send(tweetsGetUsername.reverse())
 }) 
 
 
