@@ -20,17 +20,18 @@ app.post("/sign-up", (req, res)=>{
 })
 
 app.post("/tweets", (req, res) => {
-    const {username, tweet} = req.body
-    const userSignedUp = users.find((el)=>el.username === username)
+    const {tweet} = req.body
+    const user = req.headers.user
+    const userSignedUp = users.find((el)=>el.username === user)
 
-    if(!username || !tweet || typeof(username) !== "string" || typeof(tweet) !== "string") {
+    if(!user || !tweet || typeof(user) !== "string" || typeof(tweet) !== "string") {
         return res.status(400).send("Todos os campos são obrigatórios!")
     }
     
     if (!userSignedUp) {
         return res.status(401).send("UNAUTHORIZED")
     } else {
-        tweets.push({username, tweet})
+        tweets.push({username: user, tweet})
         res.status(201).send("OK")
     }
 })
@@ -52,16 +53,16 @@ app.get("/tweets", (req, res)=>{
     
     if (!page) {
         res.status(200).send(tweetsGetReverse.slice(0, 10))
+        console.log(page)
     }
 
     if(page>=1) {
         res.status(200).send(tweetsGetReverse.slice((page*10 - 10), (page*10)))
+        console.log(page)
     } else {
         res.status(400).send("Informe uma página válida!")
     }
-
-   
-    
+       
     
 
     /* for (let i = tweets.length-1; i>tweets.length-11; i--) {
