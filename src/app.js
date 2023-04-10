@@ -37,8 +37,14 @@ app.post("/tweets", (req, res) => {
 
 app.get("/tweets", (req, res)=>{
     const tweetsGet = []
+    const page = req.query.page
 
     for (let i = tweets.length-1; i>tweets.length-11; i--) {
+
+        if(tweets.length === 0) {
+            break
+        }
+
         const username = tweets[i].username
         const tweet = tweets[i].tweet
         const avatarFind = users.find(el=>el.username===username)
@@ -51,22 +57,28 @@ app.get("/tweets", (req, res)=>{
         } 
     }
 
-    res.send(tweetsGet)
+    res.status(200).send(tweetsGet)
 })
 
 app.get("/tweets/:username", (req, res)=> {
     const {username} = req.params
-    const avatarFind = users.find(el=>el.username===username)
-    const avatar = avatarFind.avatar
     const tweetsGet = tweets.filter((el) => el.username === username)
     const tweetsGetUsername = []
 
     for (let i = 0; i<tweetsGet.length; i++) {
+
+        if (tweetsGet.length === 0) {
+            break
+        }
+        const avatarFind = users.find(el=>el.username===username)
+        const avatar = avatarFind.avatar
+        
+
         const tweet = tweetsGet[i].tweet
         tweetsGetUsername.push({username, avatar, tweet})
     }
 
-    res.send(tweetsGetUsername)
+    res.status(200).send(tweetsGetUsername)
 }) 
 
 
